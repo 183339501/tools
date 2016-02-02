@@ -1,18 +1,18 @@
-// ¶ÔDateµÄÀ©Õ¹£¬½« Date ×ª»¯ÎªÖ¸¶¨¸ñÊ½µÄString
-// ÔÂ(M)¡¢ÈÕ(d)¡¢Ğ¡Ê±(h)¡¢·Ö(m)¡¢Ãë(s)¡¢¼¾¶È(q) ¿ÉÒÔÓÃ 1-2 ¸öÕ¼Î»·û£¬
-// Äê(y)¿ÉÒÔÓÃ 1-4 ¸öÕ¼Î»·û£¬ºÁÃë(S)Ö»ÄÜÓÃ 1 ¸öÕ¼Î»·û(ÊÇ 1-3 Î»µÄÊı×Ö)
-// Àı×Ó£º
+// å¯¹Dateçš„æ‰©å±•ï¼Œå°† Date è½¬åŒ–ä¸ºæŒ‡å®šæ ¼å¼çš„String
+// æœˆ(M)ã€æ—¥(d)ã€å°æ—¶(h)ã€åˆ†(m)ã€ç§’(s)ã€å­£åº¦(q) å¯ä»¥ç”¨ 1-2 ä¸ªå ä½ç¬¦ï¼Œ
+// å¹´(y)å¯ä»¥ç”¨ 1-4 ä¸ªå ä½ç¬¦ï¼Œæ¯«ç§’(S)åªèƒ½ç”¨ 1 ä¸ªå ä½ç¬¦(æ˜¯ 1-3 ä½çš„æ•°å­—)
+// ä¾‹å­ï¼š
 // (new Date()).Format("yyyy-MM-dd hh:mm:ss.S") ==> 2016-01-21 15:09:04.43
 // (new Date()).Format("yyyy-M-d h:m:s.S")      ==> 2016-1-21 8:9:4.18
 Date.prototype.Format = function (fmt) {
     var o = {
-        "M+": this.getMonth() + 1, //ÔÂ·İ
-        "d+": this.getDate(), //ÈÕ
-        "h+": this.getHours(), //Ğ¡Ê±
-        "m+": this.getMinutes(), //·Ö
-        "s+": this.getSeconds(), //Ãë
-        "q+": Math.floor((this.getMonth() + 3) / 3), //¼¾¶È
-        "S" : this.getMilliseconds() //ºÁÃë
+        "M+": this.getMonth() + 1, //æœˆä»½
+        "d+": this.getDate(), //æ—¥
+        "h+": this.getHours(), //å°æ—¶
+        "m+": this.getMinutes(), //åˆ†
+        "s+": this.getSeconds(), //ç§’
+        "q+": Math.floor((this.getMonth() + 3) / 3), //å­£åº¦
+        "S" : this.getMilliseconds() //æ¯«ç§’
     };
     if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
     for (var k in o)
@@ -21,7 +21,7 @@ Date.prototype.Format = function (fmt) {
 };
 
 /**
-¶ÔurlµÄ²ÎÊı×ª»»³Ékey-valueµÄ¶ÔÏó
+å¯¹urlçš„å‚æ•°è½¬æ¢æˆkey-valueçš„å¯¹è±¡
 parseQueryUrl("baidu.com?parmas1=a&params2=key"); ===>{params1 : "a",params2 : "key"}
 */
 function parseQueryUrl(url) {
@@ -39,7 +39,7 @@ function parseQueryUrl(url) {
 }
 
 /**
-ÅĞ¶ÏÊı×éÖĞÊÇ·ñÓĞÖØ¸´µÄÔªËØ
+åˆ¤æ–­æ•°ç»„ä¸­æ˜¯å¦æœ‰é‡å¤çš„å…ƒç´ 
 **/
 function assertArrRepeat(arr){
 	var hash = {};
@@ -52,7 +52,7 @@ function assertArrRepeat(arr){
 };
 
 /**
-macµØÖ·¸ñÊ½»¯
+macåœ°å€æ ¼å¼åŒ–
 **/
 String.prototype.toMac  = function () {
 	return this.match( /.{1,2}/g).join(":");
@@ -73,7 +73,7 @@ String.prototype.format = function () {
     return s;  
 };  
 
-/****·µ»ØÒ³Ãæ¶¥²¿*****/
+/****è¿”å›é¡µé¢é¡¶éƒ¨*****/
 function backTop(btnId) {
     var btn = document.getElementById(btnId);
     var d = document.documentElement;
@@ -95,61 +95,108 @@ function backTop(btnId) {
 };
 backTop('goTop');
 
-/***************³£ÓÃÕıÔò***********************/
-//ÕıÕûÊı
+/*************è¡¨æ ¼åˆ†é¡µ*****************/
+function TablePage (id,size){
+        var $table = $(id);
+        var currentPage = 0;  //å½“å‰é¡µ
+        var pageSize = size;  //æ¯é¡µè¡Œæ•°ï¼ˆä¸åŒ…æ‹¬è¡¨å¤´ï¼‰
+        $table.bind("repaginate", function() {
+            $table.find("tbody tr").hide().slice(currentPage * pageSize, (currentPage + 1) * pageSize).show();
+        });
+        var numRows = $table.find("tbody tr").length;  //è®°å½•å®—æ¡æ•°
+        var numPages = Math.ceil(numRows/pageSize);    //æ€»é¡µæ•°
+        var $pager = $(' <nav><div>æ€»<b>'+numRows+'</b>æ¡è®°å½•æ•°&nbsp;&nbsp;&nbsp;å…±<b>'+numPages+'</b>é¡µ</div> <ul class="pagination"> <li> <a href="javascript:;" aria-label="Previous" id="Prev"> &laquo;</a> </li></ul></nav>');  //åˆ†é¡µdiv
+        for( var page = 0; page < numPages; page++ ) {
+            $("<li><a href='javascript:;' id='"+(page+1)+"'>"+ (page+1) +"</a></li>")
+                .bind("click", { "newPage": page }, function(event){
+                    currentPage = event.data["newPage"];
+                    $(this).attr("class","active");
+                    $(this).siblings().removeClass("active");
+                    $table.trigger("repaginate");
+                }).appendTo($pager.find(".pagination"));
+        }
+        var next=$('<li><a href="javascript:;" aria-label="Next" id="Next">&raquo;</a></li>');
+        $pager.find(".pagination").append(next);
+        $pager.insertAfter($table);//åˆ†é¡µdivæ’å…¥table
+        $("#1").parent().attr("class","active");
+        $table.trigger("repaginate");
+        $("#Prev").bind("click",function(){
+            var prev=Number($(".pagination .active").find("a").text())-2;
+            currentPage=prev;
+            if(currentPage<0) {
+                return;
+            }
+            $("#"+$(".pagination .active").find("a").text()).parent().removeClass("active");
+            $("#"+(prev+1)).parent().addClass("active");
+            $table.trigger("repaginate");
+        });
+        $("#Next").bind("click",function(){
+            var next=$(".pagination .active").find("a").attr("id");
+            currentPage=Number(next);
+            if((currentPage+1)>numPages) {
+                return;
+            }
+            $("#"+(currentPage+1)).parent().attr("class","active");
+            $("#"+(currentPage)).parent().removeClass("active");
+            $table.trigger("repaginate");
+        });
+    }
+
+/***************å¸¸ç”¨æ­£åˆ™***********************/
+//æ­£æ•´æ•°
 /^[0-9]*[1-9][0-9]*$/;
-//¸ºÕûÊı
+//è´Ÿæ•´æ•°
 /^-[0-9]*[1-9][0-9]*$/;
-//Õı¸¡µãÊı
+//æ­£æµ®ç‚¹æ•°
 /^(([0-9]+\.[0-9]*[1-9][0-9]*)|([0-9]*[1-9][0-9]*\.[0-9]+)|([0-9]*[1-9][0-9]*))$/;   
-//¸º¸¡µãÊı
+//è´Ÿæµ®ç‚¹æ•°
 /^(-(([0-9]+\.[0-9]*[1-9][0-9]*)|([0-9]*[1-9][0-9]*\.[0-9]+)|([0-9]*[1-9][0-9]*)))$/;  
-//¸¡µãÊı
+//æµ®ç‚¹æ•°
 /^(-?\d+)(\.\d+)?$/;
-//emailµØÖ·
+//emailåœ°å€
 /^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$/;
-//urlµØÖ·
+//urlåœ°å€
 /^[a-zA-z]+://(\w+(-\w+)*)(\.(\w+(-\w+)*))*(\?\S*)?$/;
-»ò£º^http:\/\/[A-Za-z0-9]+\.[A-Za-z0-9]+[\/=\?%\-&_~`@[\]\':+!]*([^<>\"\"])*$ 
-//Äê/ÔÂ/ÈÕ£¨Äê-ÔÂ-ÈÕ¡¢Äê.ÔÂ.ÈÕ£©
+æˆ–ï¼š^http:\/\/[A-Za-z0-9]+\.[A-Za-z0-9]+[\/=\?%\-&_~`@[\]\':+!]*([^<>\"\"])*$ 
+//å¹´/æœˆ/æ—¥ï¼ˆå¹´-æœˆ-æ—¥ã€å¹´.æœˆ.æ—¥ï¼‰
 /^(19|20)\d\d[- /.](0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])$/;
-//Æ¥ÅäÖĞÎÄ×Ö·û
+//åŒ¹é…ä¸­æ–‡å­—ç¬¦
 /[\u4e00-\u9fa5]/;
-//Æ¥ÅäÕÊºÅÊÇ·ñºÏ·¨(×ÖÄ¸¿ªÍ·£¬ÔÊĞí5-10×Ö½Ú£¬ÔÊĞí×ÖÄ¸Êı×ÖÏÂ»®Ïß)
+//åŒ¹é…å¸å·æ˜¯å¦åˆæ³•(å­—æ¯å¼€å¤´ï¼Œå…è®¸5-10å­—èŠ‚ï¼Œå…è®¸å­—æ¯æ•°å­—ä¸‹åˆ’çº¿)
 /^[a-zA-Z][a-zA-Z0-9_]{4,9}$/;
-//Æ¥Åä¿Õ°×ĞĞµÄÕıÔò±í´ïÊ½
+//åŒ¹é…ç©ºç™½è¡Œçš„æ­£åˆ™è¡¨è¾¾å¼
 /\n\s*\r/;
-//Æ¥ÅäÖĞ¹úÓÊÕş±àÂë
+//åŒ¹é…ä¸­å›½é‚®æ”¿ç¼–ç 
 /[1-9]\d{5}(?!\d)/;
-//Æ¥ÅäÉí·İÖ¤
+//åŒ¹é…èº«ä»½è¯
 /\d{15}|\d{18}/;
-//Æ¥Åä¹úÄÚµç»°ºÅÂë
+//åŒ¹é…å›½å†…ç”µè¯å·ç 
 /(\d{3}-|\d{4}-)?(\d{8}|\d{7})?/;
-//Æ¥ÅäIPµØÖ·
+//åŒ¹é…IPåœ°å€
 /((2[0-4]\d|25[0-5]|[01]?\d\d?)\.){3}(2[0-4]\d|25[0-5]|[01]?\d\d?)/;
-//Æ¥ÅäÊ×Î²¿Õ°××Ö·ûµÄÕıÔò±í´ïÊ½
+//åŒ¹é…é¦–å°¾ç©ºç™½å­—ç¬¦çš„æ­£åˆ™è¡¨è¾¾å¼
 /^\s*|\s*$/;
-//Æ¥ÅäHTML±ê¼ÇµÄÕıÔò±í´ïÊ½
+//åŒ¹é…HTMLæ ‡è®°çš„æ­£åˆ™è¡¨è¾¾å¼
 < (\S*?)[^>]*>.*?|< .*? />;
-//ÌáÈ¡ĞÅÏ¢ÖĞµÄÍøÂçÁ´½Ó
+//æå–ä¿¡æ¯ä¸­çš„ç½‘ç»œé“¾æ¥
 (h|H)(r|R)(e|E)(f|F) *= *('|")?(\w|\\|\/|\.)+('|"| *|>)? 
-//ÌáÈ¡ĞÅÏ¢ÖĞµÄÓÊ¼şµØÖ·
+//æå–ä¿¡æ¯ä¸­çš„é‚®ä»¶åœ°å€
 \w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)* 
-//ÌáÈ¡ĞÅÏ¢ÖĞµÄÍ¼Æ¬Á´½Ó
+//æå–ä¿¡æ¯ä¸­çš„å›¾ç‰‡é“¾æ¥
 (s|S)(r|R)(c|C) *= *('|")?(\w|\\|\/|\.)+('|"| *|>)? 
-//ÌáÈ¡ĞÅÏ¢ÖĞµÄ IP µØÖ·
+//æå–ä¿¡æ¯ä¸­çš„ IP åœ°å€
 (\d+)\.(\d+)\.(\d+)\.(\d+)
-//È¡ĞÅÏ¢ÖĞµÄÖĞ¹úÊÖ»úºÅÂë
+//å–ä¿¡æ¯ä¸­çš„ä¸­å›½æ‰‹æœºå·ç 
 (86)*0*13\d{9} 
-//ÌáÈ¡ĞÅÏ¢ÖĞµÄÖĞ¹úÓÊÕş±àÂë
+//æå–ä¿¡æ¯ä¸­çš„ä¸­å›½é‚®æ”¿ç¼–ç 
 [1-9]{1}(\d+){5} 
-//ÌáÈ¡ĞÅÏ¢ÖĞµÄ¸¡µãÊı£¨¼´Ğ¡Êı£©
+//æå–ä¿¡æ¯ä¸­çš„æµ®ç‚¹æ•°ï¼ˆå³å°æ•°ï¼‰
 (-?\d*)\.?\d+ 
-//ÌáÈ¡ĞÅÏ¢ÖĞµÄÈÎºÎÊı×Ö
+//æå–ä¿¡æ¯ä¸­çš„ä»»ä½•æ•°å­—
 (-?\d*)(\.\d+)?
-//µç»°ÇøºÅ
+//ç”µè¯åŒºå·
 ^0\d{2,3}$
-//ÕÊºÅ£¨×ÖÄ¸¿ªÍ·£¬ÔÊĞí 5-16 ×Ö½Ú£¬ÔÊĞí×ÖÄ¸Êı×ÖÏÂ»®Ïß£©
+//å¸å·ï¼ˆå­—æ¯å¼€å¤´ï¼Œå…è®¸ 5-16 å­—èŠ‚ï¼Œå…è®¸å­—æ¯æ•°å­—ä¸‹åˆ’çº¿ï¼‰
 ^[a-zA-Z][a-zA-Z0-9_]{4,15}$ 
-//ÖĞÎÄ¡¢Ó¢ÎÄ¡¢Êı×Ö¼°ÏÂ»®Ïß
+//ä¸­æ–‡ã€è‹±æ–‡ã€æ•°å­—åŠä¸‹åˆ’çº¿
 ^[\u4e00-\u9fa5_a-zA-Z0-9]+$
