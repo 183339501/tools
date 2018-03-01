@@ -95,6 +95,16 @@ function backTop(btnId) {
 };
 backTop('goTop');
 
+
+/**********用js实现千位分隔符********/
+function commafy(num) {
+  return num && num
+    .toString()
+    .replace(/(\d)(?=(\d{3})+\.)/g, function($0, $1) {
+        return $1 + ",";
+  });
+}
+
 /*************表格分页*****************/
 function TablePage (id,size){
         var $table = $(id);
