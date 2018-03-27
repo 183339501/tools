@@ -152,6 +152,11 @@ function TablePage (id,size){
         });
     }
 
+/***************对象深拷贝***********************/
+var deep_copy = function(o) {
+    return JSON.parse(JSON.stringify(o));
+};
+
 /***************常用正则***********************/
 //正整数
 /^[0-9]*[1-9][0-9]*$/;
